@@ -3,8 +3,13 @@ from fastai.vision.all import *
 import pathlib
 import platform
 
-# Set the correct path type based on the operating system
+# Check the current operating system
 plt = platform.system()
+
+# Set path handling based on the OS without redefining internal classes
+if plt == 'Linux' or plt == 'Darwin':  # Handles Linux and macOS systems
+    # Force PosixPath if the system is not Windows
+    pathlib.WindowsPath = pathlib.PosixPath
 
 # Streamlit app title
 st.title('Transportni klassifikatsiya qiluvchi model')
@@ -17,9 +22,13 @@ if file:
     # Create an image object that the model can process
     img = PILImage.create(file)
 
-    # Load the model using pathlib.Path to handle paths appropriately
+    # Load the model ensuring correct path type
     model_path = pathlib.Path('transport_model.pkl')
-    model = load_learner(model_path)  # Ensure model path is handled as a Path object
+    try:
+        model = load_learner(model_path)
+    except Exception as e:
+        st.error(f"Error loading model: {e}")
+        st.stop()
 
     # Predict the class of the uploaded image
     pred, pred_id, probs = model.predict(img)
