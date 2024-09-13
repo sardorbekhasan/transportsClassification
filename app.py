@@ -2,14 +2,14 @@ import streamlit as st
 from fastai.vision.all import *
 import pathlib
 import platform
+import os
 
 # Check the current operating system
 plt = platform.system()
 
-# Set path handling based on the OS without redefining internal classes
-if plt == 'Linux' or plt == 'Darwin':  # Handles Linux and macOS systems
-    # Force PosixPath if the system is not Windows
-    pathlib.WindowsPath = pathlib.PosixPath
+# Force paths to PosixPath if running on non-Windows systems
+if plt != 'Windows':
+    pathlib.WindowsPath = pathlib.PosixPath  # Redirect WindowsPath to PosixPath
 
 # Streamlit app title
 st.title('Transportni klassifikatsiya qiluvchi model')
@@ -22,10 +22,14 @@ if file:
     # Create an image object that the model can process
     img = PILImage.create(file)
 
-    # Load the model ensuring correct path type
+    # Convert the model path explicitly to PosixPath if not on Windows
     model_path = pathlib.Path('transport_model.pkl')
+    if plt != 'Windows':
+        model_path = model_path.as_posix()  # Convert the path to a POSIX string format
+
+    # Load the model
     try:
-        model = load_learner(model_path)
+        model = load_learner(model_path)  # Attempt to load the learner
     except Exception as e:
         st.error(f"Error loading model: {e}")
         st.stop()
