@@ -6,8 +6,22 @@ import platform
 
 #plt = platform.system()
 #if plt == 'Linux': pathlib.WindowsPath = pathlib.PosixPath
-temp = pathlib.PosixPath
-pathlib.PosixPath = pathlib.WindowsPath
+#temp = pathlib.PosixPath
+#pathlib.PosixPath = pathlib.WindowsPath
+
+from pathlib import Path, PosixPath, WindowsPath
+import os
+
+if os.name == 'nt':
+    PathClass = WindowsPath
+else:
+    PathClass = PosixPath
+
+# Masalan, PathClass ni ishlatish
+model_path = PathClass("modelingiz/yo'liga")
+   
+
+
 st.title('Transportni klassifikatsiya qiluvchi model')
 
 file = st.file_uploader('Rasm yuklash', type=['png','jpeg', 'gif', 'svg'])
