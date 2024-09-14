@@ -4,23 +4,11 @@ import pathlib
 import plotly.express as px
 import platform
 
-#plt = platform.system()
-#if plt == 'Linux': pathlib.WindowsPath = pathlib.PosixPath
-#temp = pathlib.PosixPath
-#pathlib.PosixPath = pathlib.WindowsPath
+# plt = platform.system()
+# if plt == 'Linux': pathlib.WindowsPath = pathlib.PosixPath
 
-from pathlib import Path, PosixPath, WindowsPath
-import os
-
-if os.name == 'nt':
-    PathClass = WindowsPath
-else:
-    PathClass = PosixPath
-
-# Masalan, PathClass ni ishlatish
-model_path = PathClass("modelingiz/yo'liga")
-   
-
+temp = pathlib.PosixPath
+pathlib.PosixPath = temp
 
 st.title('Transportni klassifikatsiya qiluvchi model')
 
